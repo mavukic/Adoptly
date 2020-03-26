@@ -1,0 +1,131 @@
+﻿
+
+@model Adoptly.Models.UdrugaView
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Postojeće udruge</h1>
+@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Naziv
+                </th>
+                <th>
+                    SkraceniNaziv
+                </th>
+                <th>
+                    Adresa
+                </th>
+                <th>
+                    Grad
+                </th>
+                <th>
+                    Tel
+                </th>
+                <th>
+                    Mail
+                </th>
+                <th>
+                    Web
+                </th>
+                <th>
+                    Posts
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            <tr>
+                @foreach (var item in Model.Udruge)
+                {
+                    string selectedRow = "";
+                    if (item.Id == (int?)ViewData["UdrugaID"])
+                    {
+                        selectedRow = "success";
+                    }
+                <tr class="@selectedRow">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Naziv)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SkraceniNaziv)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Adresa)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Grad)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Tel)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mail)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Web)
+                    </td>
+                    <td>
+                        @{
+                            foreach (var course in item.Posts)
+                            {
+                                @(course.Date)<br />
+                            }
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Index" asp-route-id="@item.Id">Select</a>|
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {<a asp-action="Edit" asp-route-id="@item.Id">Edit</a>}
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>}
+
+                        </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        @if (Model.Posts != null)
+        {
+            <h3>Postovi udruge</h3>
+            <table class="table">
+                <tr>
+                    <th></th>
+
+                </tr>
+
+                @foreach (var item in Model.Posts)
+                {
+                    string selectedRow = "";
+                    if (item.Id == (int?)ViewBag.LjubimacID)
+                    {
+                        selectedRow = "success";
+                    }
+                    <tr class="@selectedRow">
+
+
+                        <td>
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@item.Id">Select</a>
+                        </td>
+                        <td>
+                            @item.Date;
+                        </td>
+
+                    </tr>
+                }
+
+            </table>
+        }

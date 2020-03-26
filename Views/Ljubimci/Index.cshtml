@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Adoptly.Models.Ljubimac>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Životinje koje je moguće posvojiti</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Ime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Skloniste)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vrsta)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Opis)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Godine)
+            </th>
+           
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ime)
+            </td>
+            <td>
+                @Html.Raw(item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Skloniste.Naziv)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Vrsta)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Opis)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Godine)
+            </td>
+
+            <td>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin")) { 
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
+                }|
+                <a asp-controller="Posvajatelji" asp-action="Create">Posvoji</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
