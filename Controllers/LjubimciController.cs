@@ -20,14 +20,43 @@ namespace Adoptly.Controllers
         }
 
         // GET: Ljubimci
-        public async Task<IActionResult> Index()
+        public  async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Ljubimac.Include(l => l.Skloniste).Where(l => l.SklonisteId != null); 
+            var applicationDbContext = _context.Ljubimac.Include(l => l.Skloniste).Where(l => l.SklonisteId != null);
             //treba prikazati ljubimce koji nemaju posvajatelja a u sklonistu su 
-            
+
             //applicationDbContext.Include(l => l.PosvajteljId).Where(l => l.PosvajteljId ==null);
-         
-            return View(await applicationDbContext.ToListAsync());
+            var list = new List<Ljubimac>();
+            var listpos = new List<Posvajatelj>();
+            var listlj = new List<Ljubimac>();
+            var listlj2 = new List<Ljubimac>();
+            foreach (var d in _context.Ljubimac)
+            {
+                list.Add(d);
+                    
+            }
+            foreach (var d in _context.Posvajatelj)
+            {
+                listpos.Add(d);
+
+            }
+               
+            foreach (var b in list)
+            {
+             foreach(var c in listpos)
+                {
+                    if (!listpos.Exists(x => x.LjubimacId == b.Id)&&b.SklonisteId!=null)
+                    {
+                        if(!listlj.Contains(b))
+                        listlj.Add(b);
+                    }
+                    
+              
+                    
+                }
+            }
+   
+            return View( listlj);
         }
         public async Task<IActionResult> Izgubljeni()
         {
@@ -57,7 +86,7 @@ namespace Adoptly.Controllers
         public IActionResult Create()
         {
             ViewData["SklonisteId"] = new SelectList(_context.Set<Skloniste>(), "Id", "Id");
-            ViewData["PosvajateljId"] = new SelectList(_context.Set<Skloniste>(), "Id", "Prezime");
+       
             return View();
         }
 
@@ -72,10 +101,10 @@ namespace Adoptly.Controllers
             {
                 _context.Add(ljubimac);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Ljubimci");
             }
             ViewData["SklonisteId"] = new SelectList(_context.Set<Skloniste>(), "Id", "Id", ljubimac.SklonisteId);
-          
+           
             return View(ljubimac);
         }
 
@@ -127,7 +156,7 @@ namespace Adoptly.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Ljubimci");
             }
             ViewData["SklonisteId"] = new SelectList(_context.Set<Skloniste>(), "Id", "Id", ljubimac.SklonisteId);
             ViewData["PosvajateljId"] = new SelectList(_context.Set<Skloniste>(), "Id", "Prezime", ljubimac.PosvajteljId);
@@ -161,7 +190,7 @@ namespace Adoptly.Controllers
             var ljubimac = await _context.Ljubimac.FindAsync(id);
             _context.Ljubimac.Remove(ljubimac);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Ljubimci");
         }
 
         private bool LjubimacExists(int id)

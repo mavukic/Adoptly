@@ -65,7 +65,8 @@ namespace Adoptly.Controllers
             {
                 _context.Add(post);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(
+                  "Index", "Posts");
             }
             ViewData["UdrugaId"] = new SelectList(_context.Set<Udruga>(), "Id", "Naziv", post.UdrugaId);
             return View(post);
@@ -118,7 +119,8 @@ namespace Adoptly.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(
+                    "Index", "Posts");
             }
             ViewData["UdrugaId"] = new SelectList(_context.Set<Udruga>(), "Id", "Id", post.UdrugaId);
             return View(post);
@@ -151,7 +153,8 @@ namespace Adoptly.Controllers
             var post = await _context.Post.FindAsync(id);
             _context.Post.Remove(post);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(
+                  "Index", "Posts");
         }
 
         private bool PostExists(int id)

@@ -65,12 +65,14 @@ namespace Adoptly.Controllers
             {
                
                 _context.Add(posvajatelj);
+                
 
                 await _context.SaveChangesAsync();
-               
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(
+                                "Index", "Posvajatelji");
             }
 
+          
 
             ViewData["LjubimacId"] = new SelectList(_context.Ljubimac, "Id", "Ime", posvajatelj.LjubimacId);
             return View(posvajatelj);
@@ -123,7 +125,8 @@ namespace Adoptly.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(
+                                      "Index", "Posvajatelji");
             }
             ViewData["LjubimacId"] = new SelectList(_context.Ljubimac, "Id", "Id", posvajatelj.LjubimacId);
             return View(posvajatelj);
@@ -156,7 +159,8 @@ namespace Adoptly.Controllers
             var posvajatelj = await _context.Posvajatelj.FindAsync(id);
             _context.Posvajatelj.Remove(posvajatelj);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(
+                                 "Index", "Posvajatelji");
         }
 
         private bool PosvajateljExists(int id)
